@@ -1,4 +1,5 @@
 #include<iostream>
+#include<ctime>
 using namespace std;
 using std::cin;
 using std::cout;
@@ -16,12 +17,18 @@ public:
         this->Data = Data;
         this->pNext = pNext;
         count++;
+#ifdef DEBUG
         cout << "EConstructor:\t" << this << endl;
+#endif // DEBUG
+
     }
     ~Element()
     {
         count--;
+#ifdef DEBUG
         cout << "EDestructor:\t" << this << endl;
+#endif // DEBUG
+
     }
     friend class ForwardList;
 };
@@ -76,6 +83,7 @@ public:
             Head = Head->pNext;
             delete temp;
         }
+        reverse();
         size = 0;
         Element* temp = other.Head;
         while (temp != nullptr)
@@ -188,6 +196,19 @@ public:
         size++;
     }
 
+    void reverse()
+    {
+        ForwardList buffer;
+        while (Head)
+        {
+            buffer.push_front(Head->Data);
+            pop_front();
+
+        }
+        Head = buffer.Head;
+        buffer.Head = nullptr;
+    }
+
     void print()const
     {
         Element* Temp = Head; //Temp - это итератор
@@ -213,12 +234,17 @@ void main()
 #ifdef BASE_CHECK
     int n;
     cout << "Введите размер списка: "; cin >> n;
+    clock_t start = clock();
     ForwardList list;
     for (int i = 0; i < n; i++)
     {
         list.push_back(rand() % 100);
     }
-    list.print();
+    clock_t end = clock();
+
+    //list.print();
+    cout << "Список создан, за" << double(end-start)/CLOCKS_PER_SEC << endl;
+    system("PAUSE");
     //list.push_back(123);
     //list.print();
     //list.pop_back();
@@ -228,7 +254,7 @@ void main()
     cout << "Введите индекс добавляемого элемента: "; cin >> index;
     cout << "Введите значение добавляемого элемента: "; cin >> value;
     list.insert(value, index);
-    list.print();
+    //list.print();
 #endif BASE_CHECK
 
 #ifdef MULTIPLE_LISTS
