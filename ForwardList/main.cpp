@@ -12,6 +12,15 @@ class Element
     Element* pNext; //јдрес следующего элемента
     static int count;//ќбъ€вление статической переменной 
 public:
+    Iterator begin()
+    {
+        return Head;
+    }
+    Iterator end()
+    {
+        return nullptr;
+    }
+
     Element(int Data, Element* pNext = nullptr)
     {
         this->Data = Data;
@@ -30,9 +39,48 @@ public:
 #endif // DEBUG
 
     }
+    friend class Iterator;
     friend class ForwardList;
 };
 int Element::count = 0;//»нициализаци€ статической переменной
+
+class Iterator
+{
+    Element* Temp;
+public:
+    Iterator(Element* Temp = nullptr) :Temp(Temp)
+    {
+        cout << "ItConstructor:\t" << this << endl;
+    }
+    ~Iterator()
+    {
+        cout << "ItDestructor:\t" << this << endl;
+    }
+    Iterator& operator++()
+    {
+        Temp = Temp->pNext;
+    }
+
+    bool operator==(const Iterator& other)const
+    {
+        return this->Temp != other.Temp;
+    }
+
+    bool operator!=(const Iterator& other)const
+    {
+        return this->Temp != other.Temp;
+    }
+
+    const int& operator*()const
+    {
+        return Temp->Data;
+    }
+
+    int& operator*()
+    {
+        return Temp->Data;
+    }
+};
 
 class ForwardList
 {
@@ -59,6 +107,17 @@ public:
             push_back(temp->Data);
             temp = temp->pNext;
         }
+    }
+
+    ForwardList(const std::initializer_list<int>& il) :ForwardList()
+    {
+        //initializer_list - это контейнер
+        //контейнер - это обЏект который организует хранение других объектов в пам€ти
+        //у любого контейнера есть методы begin() и end()
+        //begin() возвращает итератор на начало конейнера
+        //end() возвращает итератор на конец конейнера
+        for (int const* it = il.begin(); it != il.end(); it++)
+            push_back(*it);
     }
 
     ~ForwardList()
@@ -223,9 +282,12 @@ public:
     }
 };
 
-#define BASE_CHECK
+
+
+//#define BASE_CHECK
 //#define MULTIPLE_LISTS
-#define NEW_FEATURES
+//#define NEW_FEATURES
+//#define RANGE_BASED_FOR_ARRAY
 
 void main()
 {
@@ -309,4 +371,27 @@ void main()
         temp_list.push_back(2);
     }
 #endif NEW_FEATURES
-}
+
+#ifdef RANGE_BASED_FOR_ARRAY
+    int arr[] = { 3, 5, 8, 13, 21 };
+    for (int i = 0; i < sizeof(arr) / sizeof(arr[0]); i++)
+    {
+        cout << arr[i] << tab;
+    }
+    cout << endl;
+    for (int i : arr)
+    {
+        cout << i << tab;
+    }
+    cout << endl;
+#endif 
+
+    ForwardList list = { 3,5,8,13,21 };
+    list.print();
+    for (int : list)
+    {
+        cout << i << tab;
+    }
+    cout << endl;
+    int a = 2;
+}   
