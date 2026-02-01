@@ -388,7 +388,7 @@ void main()
 
     ForwardList list = { 3,5,8,13,21 };
     list.print();
-    for (int : list)
+    for (int i : list)
     {
         cout << i << tab;
     }
